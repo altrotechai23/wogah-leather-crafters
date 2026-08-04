@@ -1,0 +1,145 @@
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { ChevronRight } from 'lucide-react'
+import { CartDrawer } from '@/components/cart/cart-drawer'
+import { ProductBuyPanel } from '@/components/product-buy-panel'
+import { ProductCard } from '@/components/product-card'
+import { SiteFooter } from '@/components/site-footer'
+import { SiteHeader } from '@/components/site-header'
+import { formatPrice, getProduct, products } from '@/lib/products'
+
+export function generateStaticParams() {
+  return products.map((p) => ({ slug: p.slug }))
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const product = getProduct(slug)
+  if (!product) return { title: 'Not Found | Wogah' }
+  return {
+    title: `${product.name} | Wogah Leather Crafters`,
+    description: product.description,
+  }
+}
+
+export default async function ProductPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const product = getProduct(slug)
+  if (!product) notFound()
+
+  const related = products
+    .filter((p) => p.category === product.category && p.slug !== product.slug)
+    .slice(0, 4)
+  const fallback = products.filter((p) => p.slug !== product.slug).slice(0, 4)
+  const recommendations = related.length >= 2 ? related : fallback
+
+  return (
+    <>
+      <SiteHeader />
+      <main className="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-12">
+        {/* Breadcrumb */}
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 text-xs uppercase tracking-wider text-muted-foreground"
+        >
+          <Link href="/" className="transition-colors hover:text-accent">
+            Home
+          </Link>
+          <ChevronRight className="size-3" />
+          <Link href="/shop" className="transition-colors hover:text-accent">
+            Shop
+          </Link>
+          <ChevronRight className="size-3" />
+          <span className="text-foreground">{product.name}</span>
+        </nav>
+
+        <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
+          {/* Image */}
+          <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-secondary">
+            <Image
+              src={product.image || '/placeholder.svg'}
+              alt={product.name}
+              fill
+              priority
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              className="object-cover"
+            />
+          </div>
+
+          {/* Details */}
+          <div className="lg:py-6">
+            <Link
+              href={`/shop?category=${product.category}`}
+              className="text-xs uppercase tracking-[0.25em] text-accent"
+            >
+              {product.category}
+            </Link>
+            <h1 className="mt-3 text-balance font-serif text-4xl leading-tight text-foreground md:text-5xl">
+              {product.name}
+            </h1>
+            <p className="mt-3 font-serif text-2xl text-foreground">
+              {formatPrice(product.price)}
+            </p>
+            <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
+              Colour — {product.color}
+            </p>
+
+            <p className="mt-6 text-pretty leading-relaxed text-muted-foreground">
+              {product.description}
+            </p>
+
+            <ProductBuyPanel product={product} />
+
+            <div className="mt-10 border-t border-border pt-8">
+              <h2 className="text-xs uppercase tracking-[0.2em] text-foreground">
+                Details
+              </h2>
+              <ul className="mt-4 space-y-2">
+                {product.details.map((detail) => (
+                  <li
+                    key={detail}
+                    className="flex gap-3 text-sm leading-relaxed text-muted-foreground"
+                  >
+                    <span className="mt-2 size-1 shrink-0 rounded-full bg-accent" />
+                    {detail}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="mt-8 grid grid-cols-2 gap-4 border-t border-border pt-8 text-sm text-muted-foreground">
+              <p>Free shipping over $250</p>
+              <p>Lifetime repairs included</p>
+              <p>Handmade to order</p>
+              <p>30-day returns</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Recommendations */}
+        <section className="mt-24">
+          <h2 className="text-center font-serif text-3xl text-foreground md:text-4xl">
+            You may also like
+          </h2>
+          <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 md:gap-x-6 lg:grid-cols-4">
+            {recommendations.map((p) => (
+              <ProductCard key={p.slug} product={p} />
+            ))}
+          </div>
+        </section>
+      </main>
+      <SiteFooter />
+      <CartDrawer />
+    </>
+  )
+}
