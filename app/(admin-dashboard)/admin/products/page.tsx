@@ -1,6 +1,9 @@
+
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import type { Product } from "@/lib/generated/prisma/client";
 
+export const dynamic = "force-dynamic";
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
     orderBy: {
@@ -41,7 +44,7 @@ export default async function ProductsPage() {
           </thead>
 
           <tbody>
-            {products.map((product) => (
+            {products.map((product: Product) => (
               <tr
                 key={product.id}
                 className="border-b transition hover:bg-muted/30"
