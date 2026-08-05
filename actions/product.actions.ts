@@ -117,3 +117,70 @@ export async function deleteProduct(id: string) {
   revalidatePath("/shop");
   revalidatePath("/admin/products");
 }
+
+export async function updateProduct(
+  id: string,
+  data: CreateProductInput
+) {
+  try {
+    await prisma.product.update({
+      where: {
+        id,
+      },
+
+      data: {
+        name: data.name,
+        slug: data.slug,
+        category: data.category,
+        tagline: data.tagline,
+        description: data.description,
+
+        price: data.price,
+
+        stock: data.stock,
+
+        sku: data.sku || null,
+
+        bestseller: data.bestseller,
+        isNew: data.isNew,
+        published: data.published,
+
+        details: data.details,
+
+        // remove old relations
+        images: {
+          deleteMany: {},
+          create: data.images.map((url, index) => ({
+            url,
+            order: index,
+          })),
+        },
+
+        colors: {
+          deleteMany: {},
+          create: data.colors.map((color) => ({
+            name: color.name,
+            hex: color.hex,
+            stock: color.stock,
+          })),
+        },
+      },
+    });
+
+    revalidatePath("/");
+    revalidatePath("/shop");
+    revalidatePath("/admin/products");
+    revalidatePath(`/admin/products/${id}`);
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    console.error(error);
+
+    return {
+      success: false,
+      message: "Unable to update product.",
+    };
+  }
+}

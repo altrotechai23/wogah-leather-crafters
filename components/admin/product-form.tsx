@@ -9,12 +9,12 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { defaultProductValues } from "@/lib/defaults/product";
 import { uploadImages } from "@/lib/upload-images";
-import { createProduct } from "@/actions/product.actions";
+import {createProduct, updateProduct,} from "@/actions/product.actions";
 import { useRouter } from "next/navigation";
 import ImageUploader from "./image-uploader";
 import ProductColors from "./product-colors";
 import ProductDetails from "./product-details";
-
+import { ProductColor, ProductImage } from "@prisma/client";
 type ProductFormValues = z.infer<typeof productSchema>;
 const categories = [
   "Bags",
@@ -25,11 +25,46 @@ const categories = [
   "Accessories",
 ];
 
-export default function ProductForm() {
+type ProductWithRelations = {
+  id: string;
+  name: string;
+  slug: string;
+  category: string;
+  tagline: string;
+  description: string;
+  price: number;
+  stock: number;
+  sku: string | null;
+  bestseller: boolean;
+  isNew: boolean;
+  published: boolean;
+  details: string[];
+  images: ProductImage[];
+  colors: ProductColor[];
+};
+
+type ProductFormProps = {
+  mode?: "create" | "edit";
+  product?: ProductFormValues;
+  productId?: string;
+};
+
+export default function ProductForm({
+  mode = "create",
+  product,
+  productId,
+}: ProductFormProps) {
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema) as any,
-    defaultValues: defaultProductValues,
-    });
+  resolver: zodResolver(productSchema) as any,
+
+  defaultValues:
+    mode === "edit" && product
+      ? {
+          ...defaultProductValues,
+          ...product,
+        }
+      : defaultProductValues,
+});
   const router = useRouter();
 
   const {
@@ -59,33 +94,45 @@ export default function ProductForm() {
   }, [name, setValue]);
 
   const onSubmit = async (data: ProductFormValues) => {
-  try {
-    const imageUrls =
-      data.images && data.images.length > 0
-        ? await uploadImages(data.images)
-        : [];
+    try {
+      let imageUrls: string[] = [];
 
-    const result = await createProduct({
-      ...data,
-      images: imageUrls,
-    });
+      if (data.images && data.images.length > 0) {
+        imageUrls = await uploadImages(data.images);
+      }
 
-    if (!result.success) {
-      toast.error(result.message);
-      return;
+      const payload = {
+        ...data,
+        images: imageUrls,
+      };
+
+      const result =
+        mode === "edit" && productId
+          ? await updateProduct(productId, payload)
+          : await createProduct(payload);
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      toast.success(
+        mode === "edit"
+          ? "Product updated successfully."
+          : "Product created successfully."
+      );
+
+      if (mode === "create") {
+        form.reset(defaultProductValues);
+      }
+
+      router.push("/admin/products");
+      router.refresh();
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong.");
     }
-
-    toast.success("Product created successfully.");
-
-    form.reset(defaultProductValues);
-
-    router.refresh();
-  } catch (error) {
-    console.error(error);
-
-    toast.error("Something went wrong.");
-  }
-};
+  };
 
   return (
     <FormProvider {...form}>
@@ -319,7 +366,14 @@ export default function ProductForm() {
               </svg>
             )}
 
-            {isSubmitting ? "Saving Product..." : "Save Product"}
+            {isSubmitting
+                ? mode === "edit"
+                  ? "Updating Product..."
+                  : "Saving Product..."
+                : mode === "edit"
+                ? "Update Product"
+                : "Save Product"
+                }
           </button>
         </div>
       </form>
