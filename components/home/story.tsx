@@ -23,15 +23,21 @@ export function Story() {
             A craft passed down through generations
           </h2>
           <p className="mt-6 text-pretty leading-relaxed text-muted-foreground">
-            Wogah began at a single workbench, with a handful of tools and a
-            belief that things worth owning are worth making well. We still work
-            that way today — no shortcuts, no assembly lines, just skilled hands
-            and honest materials.
+             
+
+                Wogah Leather Crafters is a Cape Town-based leather goods company that prides itself on crafting high-quality handmade leather products.
+
+          
+          </p>
+           <p className="mt-6 text-pretty leading-relaxed text-muted-foreground">
+             
+
+                 We are dedicated to creating unique & timeless pieces that are both functional and stylish. With a focus on traditional techniques and attention to detail, we strive to create products that are not only beautiful but also durable and practical. From bags to belts and accessories, each piece is carefully crafted to meet the highest standard of quality & craftmanship.
+
           </p>
           <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-            Each piece is saddle-stitched by hand, a technique that takes longer
-            but creates a seam that will not unravel. It is slower. It is the way
-            it should be done.
+            
+                At Wogah Leather Crafters, we believe in creating products that will last a lifetime and become treasured possessions for our customers
           </p>
 
           <dl className="mt-10 grid grid-cols-3 gap-6 border-t border-border pt-8">

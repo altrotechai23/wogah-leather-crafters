@@ -17,14 +17,13 @@ export function Hero() {
       <div className="relative mx-auto w-full max-w-7xl px-4 md:px-8">
         <div className="max-w-xl text-background">
           <p className="text-xs uppercase tracking-[0.35em] text-background/80">
-            Est. Heritage Craftsmanship
+             QUALITY LEATHER PRODUCTS.
           </p>
           <h1 className="mt-6 text-balance font-serif text-5xl leading-[1.05] md:text-7xl">
-            Leather goods made to outlast trends.
+           WOGAH LEATHER CRAFTERS
           </h1>
           <p className="mt-6 max-w-md text-pretty text-base leading-relaxed text-background/85">
-            Every Wogah piece is cut, stitched, and finished by hand from
-            full-grain leather chosen to age beautifully with each passing year.
+            AT AFFORDABLE PRICE! AT YOUR DOOR STEP.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <Link

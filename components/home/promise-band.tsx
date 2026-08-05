@@ -14,7 +14,7 @@ const PROMISES = [
   {
     icon: Truck,
     title: 'Free Shipping',
-    copy: 'Complimentary delivery on all orders over $250.',
+    copy: 'Complimentary delivery on all orders over R2000.',
   },
   {
     icon: PackageCheck,
