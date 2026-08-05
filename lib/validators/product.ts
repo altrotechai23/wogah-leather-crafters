@@ -3,24 +3,19 @@ import { z } from "zod";
 export const productSchema = z.object({
   name: z.string().min(3),
 
-  sku: z.string().optional(),
-
   slug: z.string().min(3),
 
-  category: z.enum([
-    "Bags",
-    "Wallets",
-    "Belts",
-    "Accessories",
-  ]),
-
-  price: z.coerce.number().positive(),
+  category: z.string().min(1),
 
   tagline: z.string().min(3),
 
-  description: z.string().min(20),
+  description: z.string().min(10),
+
+  price: z.coerce.number().positive(),
 
   stock: z.coerce.number().min(0),
+
+  sku: z.string().optional(),
 
   bestseller: z.boolean(),
 
@@ -28,20 +23,15 @@ export const productSchema = z.object({
 
   published: z.boolean(),
 
-  details: z.array(z.string().min(2)),
+  details: z.array(z.string()),
 
   colors: z.array(
     z.object({
-      name: z.string().min(2),
+      name: z.string(),
       hex: z.string(),
-      stock: z.coerce.number().min(0),
+      stock: z.coerce.number(),
     })
   ),
-
-  images: z
-    .array(z.string().url())
-    .min(1)
-    .max(4),
 });
 
-export type ProductInput = z.infer<typeof productSchema>;
+export type ProductFormValues = z.infer<typeof productSchema>;
