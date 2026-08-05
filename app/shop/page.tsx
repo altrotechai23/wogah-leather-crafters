@@ -4,6 +4,7 @@ import { ShopGrid } from '@/components/shop/shop-grid'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import type { Category } from '@/lib/catalog'
+import { getProducts } from '@/lib/db/products'
 
 export const metadata: Metadata = {
   title: 'Shop All | Wogah Leather Crafters',
@@ -25,10 +26,10 @@ export default async function ShopPage({
   searchParams: Promise<{ category?: string }>
 }) {
   const { category } = await searchParams
-  const initial =
-    category && VALID.includes(category as Category)
+  const initial = category && VALID.includes(category as Category)
       ? (category as Category)
-      : 'All'
+      : 'All';
+  const products = await getProducts();
 
   return (
     <>
@@ -50,7 +51,11 @@ export default async function ShopPage({
         </section>
 
         <div className="mx-auto max-w-7xl px-4 py-14 md:px-8">
-          <ShopGrid key={initial} initialCategory={initial} />
+          <ShopGrid
+            key={initial}
+            initialCategory={initial}
+            products={products}
+          />
         </div>
       </main>
       <SiteFooter />
