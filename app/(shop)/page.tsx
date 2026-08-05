@@ -6,7 +6,6 @@ import { PromiseBand } from '@/components/home/promise-band'
 import { Story } from '@/components/home/story'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
-import { WhatsAppFloating } from '@/components/whatsapp-floating'
 export const dynamic = "force-dynamic";
 export default function HomePage() {
   return (
@@ -21,7 +20,6 @@ export default function HomePage() {
       </main>
       <SiteFooter />
       <CartDrawer />
-      <WhatsAppFloating />
     </>
   )
 }

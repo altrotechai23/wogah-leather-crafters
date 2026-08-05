@@ -1,3 +1,4 @@
+import { WhatsAppFloating } from '@/components/whatsapp-floating'
 import React from 'react'
 
 function ShopLayout({
@@ -8,6 +9,7 @@ function ShopLayout({
   return (
     <div>
       {children}
+      <WhatsAppFloating />
     </div>
   )
 }
