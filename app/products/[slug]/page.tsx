@@ -8,10 +8,15 @@ import { ProductBuyPanel } from '@/components/product-buy-panel'
 import { ProductCard } from '@/components/product-card'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
-import { formatPrice, getProduct, products } from '@/lib/products'
+import { formatPrice } from '@/lib/catalog'
+import { getProduct, getProducts } from '@/lib/db/products'
 
-export function generateStaticParams() {
-  return products.map((p) => ({ slug: p.slug }))
+export async function generateStaticParams() {
+  const products = await getProducts()
+
+  return products.map((product) => ({
+    slug: product.slug,
+  }))
 }
 
 export async function generateMetadata({
@@ -20,7 +25,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const product = getProduct(slug)
+  const product = await getProduct(slug)
   if (!product) return { title: 'Not Found | Wogah' }
   return {
     title: `${product.name} | Wogah Leather Crafters`,
@@ -34,14 +39,25 @@ export default async function ProductPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const product = getProduct(slug)
+  const product = await getProduct(slug)
   if (!product) notFound()
 
+  const products = await getProducts()
+
   const related = products
-    .filter((p) => p.category === product.category && p.slug !== product.slug)
+    .filter(
+      (item) =>
+        item.category === product.category &&
+        item.slug !== product.slug
+    )
     .slice(0, 4)
-  const fallback = products.filter((p) => p.slug !== product.slug).slice(0, 4)
-  const recommendations = related.length >= 2 ? related : fallback
+
+  const fallback = products
+    .filter((item) => item.slug !== product.slug)
+    .slice(0, 4)
+
+  const recommendations =
+    related.length >= 2 ? related : fallback
 
   return (
     <>
@@ -67,7 +83,7 @@ export default async function ProductPage({
           {/* Image */}
           <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-secondary">
             <Image
-              src={product.image || '/placeholder.svg'}
+              src={product.images[0] || '/placeholder.svg'}
               alt={product.name}
               fill
               priority
@@ -91,7 +107,9 @@ export default async function ProductPage({
               {formatPrice(product.price)}
             </p>
             <p className="mt-1 text-xs uppercase tracking-wider text-muted-foreground">
-              Colour — {product.color}
+              {product.colors[0]?.name}
+              {product.colors.length > 1 &&
+                ` +${product.colors.length - 1} more colours`}
             </p>
 
             <p className="mt-6 text-pretty leading-relaxed text-muted-foreground">

@@ -3,7 +3,7 @@ import { CartDrawer } from '@/components/cart/cart-drawer'
 import { ShopGrid } from '@/components/shop/shop-grid'
 import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
-import type { Category } from '@/lib/products'
+import type { Category } from '@/lib/catalog'
 
 export const metadata: Metadata = {
   title: 'Shop All | Wogah Leather Crafters',

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Minus, Plus } from 'lucide-react'
 import { useCart } from '@/components/cart/cart-provider'
-import type { Product } from '@/lib/products'
+import type { Product } from '@/lib/types/product'
 
 export function ProductBuyPanel({ product }: { product: Product }) {
   const { addItem, openCart } = useCart()

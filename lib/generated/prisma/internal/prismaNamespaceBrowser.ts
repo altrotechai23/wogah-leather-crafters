@@ -76,6 +76,7 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 export const ProductScalarFieldEnum = {
   id: 'id',
   slug: 'slug',
+  sku: 'sku',
   name: 'name',
   category: 'category',
   price: 'price',
@@ -84,8 +85,8 @@ export const ProductScalarFieldEnum = {
   details: 'details',
   bestseller: 'bestseller',
   isNew: 'isNew',
-  stock: 'stock',
   published: 'published',
+  stock: 'stock',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -96,6 +97,7 @@ export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeo
 export const ProductImageScalarFieldEnum = {
   id: 'id',
   url: 'url',
+  alt: 'alt',
   order: 'order',
   productId: 'productId'
 } as const
@@ -106,6 +108,8 @@ export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[k
 export const ProductColorScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  hex: 'hex',
+  stock: 'stock',
   productId: 'productId'
 } as const
 
@@ -150,6 +154,14 @@ export const QueryMode = {
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
 
+export const NullsOrder = {
+  first: 'first',
+  last: 'last'
+} as const
+
+export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -157,12 +169,4 @@ export const JsonNullValueFilter = {
 } as const
 
 export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
-
-
-export const NullsOrder = {
-  first: 'first',
-  last: 'last'
-} as const
-
-export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 

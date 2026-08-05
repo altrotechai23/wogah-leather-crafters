@@ -5,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Minus, Plus, X } from 'lucide-react'
 import { useCart } from '@/components/cart/cart-provider'
-import { formatPrice } from '@/lib/products'
+import { formatPrice } from '@/lib/catalog'
 
 export function CartDrawer() {
   const {
@@ -102,7 +102,7 @@ export function CartDrawer() {
                     className="relative size-24 shrink-0 overflow-hidden rounded-sm bg-secondary"
                   >
                     <Image
-                      src={product.image || '/placeholder.svg'}
+                      src={product.images?.[0] || '/placeholder.svg'}
                       alt={product.name}
                       fill
                       sizes="96px"
@@ -120,7 +120,9 @@ export function CartDrawer() {
                           {product.name}
                         </Link>
                         <p className="mt-0.5 text-xs uppercase tracking-wider text-muted-foreground">
-                          {product.color}
+                          {product.colors.length > 0
+                            ? product.colors.map((color) => color.name).join(" • ")
+                            : "Default"}
                         </p>
                       </div>
                       <button

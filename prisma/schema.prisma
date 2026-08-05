@@ -25,6 +25,8 @@ model Product {
   id          String   @id @default(cuid())
 
   slug        String   @unique
+  sku         String?  @unique
+
   name        String
   category    String
 
@@ -36,36 +38,51 @@ model Product {
 
   bestseller  Boolean  @default(false)
   isNew       Boolean  @default(false)
-
-  stock       Int      @default(0)
   published   Boolean  @default(true)
 
-  images      ProductImage[]
-  colors      ProductColor[]
+  stock       Int      @default(0)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  images       ProductImage[]
+  colors       ProductColor[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category])
+  @@index([published])
 }
 
 
 model ProductImage {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
 
   url       String
+  alt       String?
 
-  order     Int      @default(0)
+  order     Int     @default(0)
 
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
 }
+
+
 model ProductColor {
-  id        String   @id @default(cuid())
+  id        String  @id @default(cuid())
 
   name      String
 
+  hex       String?
+
+  stock     Int     @default(0)
+
   productId String
-  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
 }
+
 
 model Order {
 

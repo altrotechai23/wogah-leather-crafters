@@ -1,9 +1,11 @@
 import Link from 'next/link'
 import { ProductCard } from '@/components/product-card'
-import { products } from '@/lib/products'
+import { getProducts } from "@/lib/db/products";
 
-export function Featured() {
-  const featured = products.filter((p) => p.bestseller).slice(0, 4)
+export async function Featured() {
+  
+  const products = await getProducts();
+  const featured = products.filter((product) => product.bestseller).slice(0, 4);
 
   return (
     <section className="bg-secondary/40 py-20 md:py-28">
