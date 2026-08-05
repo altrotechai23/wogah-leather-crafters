@@ -6,9 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { productSchema } from "@/lib/validators/product";
 import { z } from "zod";
-
+import { toast } from "sonner";
 import { defaultProductValues } from "@/lib/defaults/product";
-
+import { uploadImages } from "@/lib/upload-images";
+import { createProduct } from "@/actions/product.actions";
+import { useRouter } from "next/navigation";
 import ImageUploader from "./image-uploader";
 import ProductColors from "./product-colors";
 import ProductDetails from "./product-details";
@@ -28,6 +30,7 @@ export default function ProductForm() {
     resolver: zodResolver(productSchema) as any,
     defaultValues: defaultProductValues,
     });
+  const router = useRouter();
 
   const {
     register,
@@ -56,11 +59,33 @@ export default function ProductForm() {
   }, [name, setValue]);
 
   const onSubmit = async (data: ProductFormValues) => {
-    console.log(data);
+  try {
+    const imageUrls =
+      data.images && data.images.length > 0
+        ? await uploadImages(data.images)
+        : [];
 
-    // TODO:
-    // await createProduct(data);
-  };
+    const result = await createProduct({
+      ...data,
+      images: imageUrls,
+    });
+
+    if (!result.success) {
+      toast.error(result.message);
+      return;
+    }
+
+    toast.success("Product created successfully.");
+
+    form.reset(defaultProductValues);
+
+    router.refresh();
+  } catch (error) {
+    console.error(error);
+
+    toast.error("Something went wrong.");
+  }
+};
 
   return (
     <FormProvider {...form}>
@@ -268,9 +293,33 @@ export default function ProductForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-xl bg-black py-3 font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center gap-3 rounded-xl bg-black font-semibold text-white transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSubmitting ? "Saving..." : "Save Product"}
+            {isSubmitting && (
+              <svg
+                className="h-5 w-5 animate-spin"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="white"
+                  strokeWidth="3"
+                  opacity=".2"
+                />
+
+                <path
+                  d="M22 12a10 10 0 00-10-10"
+                  stroke="white"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            )}
+
+            {isSubmitting ? "Saving Product..." : "Save Product"}
           </button>
         </div>
       </form>

@@ -32,6 +32,8 @@ export const productSchema = z.object({
       stock: z.coerce.number(),
     })
   ),
+
+  images: z.array(z.instanceof(File)).optional(),
 });
 
 export type ProductFormValues = z.infer<typeof productSchema>;

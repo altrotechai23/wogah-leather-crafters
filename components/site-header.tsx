@@ -43,7 +43,7 @@ export function SiteHeader() {
       {/* Announcement bar */}
       <div className="bg-primary py-2 text-center text-primary-foreground">
         <p className="text-[11px] uppercase tracking-[0.25em]">
-          Complimentary shipping on orders over $250
+          Complimentary shipping on orders over R2000
         </p>
       </div>
 

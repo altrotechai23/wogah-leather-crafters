@@ -1,11 +1,16 @@
-import Link from 'next/link'
-import { ProductCard } from '@/components/product-card'
+import Link from "next/link";
+import { ProductCard } from "@/components/product-card";
 import { getProducts } from "@/lib/db/products";
 
 export async function Featured() {
-  
   const products = await getProducts();
-  const featured = products.filter((product) => product.bestseller).slice(0, 4);
+
+  const featured =
+    products.filter((product) => product.bestseller).length > 0
+      ? products.filter((product) => product.bestseller).slice(0, 4)
+      : products.slice(0, 4);
+
+  if (featured.length === 0) return null;
 
   return (
     <section className="bg-secondary/40 py-20 md:py-28">
@@ -15,10 +20,12 @@ export async function Featured() {
             <span className="text-xs uppercase tracking-[0.3em] text-accent">
               Favourites
             </span>
+
             <h2 className="mt-4 text-balance font-serif text-4xl text-foreground md:text-5xl">
               Our most loved pieces
             </h2>
           </div>
+
           <Link
             href="/shop"
             className="hidden shrink-0 border-b border-foreground pb-1 text-xs uppercase tracking-[0.2em] text-foreground transition-colors hover:border-accent hover:text-accent md:block"
@@ -29,7 +36,10 @@ export async function Featured() {
 
         <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 md:gap-x-6 lg:grid-cols-4">
           {featured.map((product) => (
-            <ProductCard key={product.slug} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
           ))}
         </div>
 
@@ -43,5 +53,5 @@ export async function Featured() {
         </div>
       </div>
     </section>
-  )
+  );
 }

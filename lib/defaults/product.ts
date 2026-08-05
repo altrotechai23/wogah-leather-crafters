@@ -33,4 +33,5 @@ export const defaultProductValues: ProductFormValues = {
       stock: 0,
     },
   ],
+  images: []
 };

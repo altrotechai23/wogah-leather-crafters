@@ -171,5 +171,5 @@ export function getProduct(slug: string) {
 }
 
 export function formatPrice(price: number) {
-  return `$${price.toLocaleString('en-US')}`
+  return `R${price.toLocaleString('en-US')}`
 }

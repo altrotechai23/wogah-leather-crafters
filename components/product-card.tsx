@@ -27,7 +27,7 @@ export function ProductCard({ product }: { product: Product }) {
             {product.isNew ? 'New' : 'Bestseller'}
           </span>
         )}
-        {/* <button
+        <button
           type="button"
           onClick={(e) => {
             e.preventDefault()
@@ -36,7 +36,7 @@ export function ProductCard({ product }: { product: Product }) {
           className="absolute inset-x-3 bottom-3 translate-y-3 bg-primary py-3 text-[11px] uppercase tracking-[0.2em] text-primary-foreground opacity-0 transition-all duration-300 hover:bg-accent group-hover:translate-y-0 group-hover:opacity-100"
         >
           Add to Cart
-        </button> */}
+        </button>
       </Link>
 
       <div className="mt-4 flex items-start justify-between gap-3">

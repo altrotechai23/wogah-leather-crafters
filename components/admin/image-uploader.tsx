@@ -1,30 +1,38 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef } from "react";
 import { ImagePlus, Trash2 } from "lucide-react";
+import { useFormContext } from "react-hook-form";
 
 export default function ImageUploader() {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [images, setImages] = useState<string[]>([]);
+  const { watch, setValue } = useFormContext();
+
+  const files = (watch("images") as File[]) || [];
 
   function handleFiles(e: ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) return;
 
-    const files = Array.from(e.target.files);
+    const selected = Array.from(e.target.files);
 
-    const previews = files.map((file) => URL.createObjectURL(file));
-
-    setImages((prev) => [...prev, ...previews]);
+    setValue("images", [...files, ...selected], {
+      shouldValidate: true,
+    });
   }
 
   function remove(index: number) {
-    setImages(images.filter((_, i) => i !== index));
+    setValue(
+      "images",
+      files.filter((_, i) => i !== index),
+      {
+        shouldValidate: true,
+      }
+    );
   }
 
   return (
     <div className="rounded-2xl border border-neutral-200 bg-white p-6">
-
       <h2 className="mb-6 text-lg font-semibold">
         Product Images
       </h2>
@@ -49,25 +57,23 @@ export default function ImageUploader() {
       </button>
 
       <input
-        ref={inputRef}
         hidden
         multiple
+        ref={inputRef}
         type="file"
         accept="image/*"
         onChange={handleFiles}
       />
 
-      {images.length > 0 && (
+      {files.length > 0 && (
         <div className="mt-6 grid grid-cols-2 gap-4">
-
-          {images.map((image, index) => (
-
+          {files.map((file, index) => (
             <div
               key={index}
               className="group relative overflow-hidden rounded-xl border"
             >
               <img
-                src={image}
+                src={URL.createObjectURL(file)}
                 className="h-36 w-full object-cover"
               />
 
@@ -78,11 +84,8 @@ export default function ImageUploader() {
               >
                 <Trash2 size={16} />
               </button>
-
             </div>
-
           ))}
-
         </div>
       )}
     </div>
