@@ -5,7 +5,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import type { Category } from '@/lib/catalog'
 import { getProducts } from '@/lib/db/products'
-
+export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: 'Shop All | Wogah Leather Crafters',
   description:

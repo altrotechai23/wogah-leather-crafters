@@ -1,6 +1,8 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { prisma } from "@/lib/prisma";
 
 export async function getProducts() {
+   noStore();
   const products = await prisma.product.findMany({
     where: {
       published: true,
@@ -61,6 +63,7 @@ export async function getProducts() {
 }
 
 export async function getProduct(slug: string) {
+   noStore();
   const product = await prisma.product.findUnique({
     where: {
       slug,

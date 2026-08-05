@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -10,7 +9,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { formatPrice } from '@/lib/catalog'
 import { getProduct, getProducts } from '@/lib/db/products'
-export const dynamic = "force-dynamic";
+
 
 // export async function generateStaticParams() {
 //   const products = await getProducts()
@@ -20,19 +19,23 @@ export const dynamic = "force-dynamic";
 //   }))
 // }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params
-  const product = await getProduct(slug)
-  if (!product) return { title: 'Not Found | Wogah' }
-  return {
-    title: `${product.name} | Wogah Leather Crafters`,
-    description: product.description,
-  }
-}
+// export async function generateMetadata({
+//   params,
+// }: {
+//   params: Promise<{ slug: string }>
+// }): Promise<Metadata> {
+//   const { slug } = await params
+//   const product = await getProduct(slug)
+//   if (!product) return { title: 'Not Found | Wogah' }
+//   return {
+//     title: `${product.name} | Wogah Leather Crafters`,
+//     description: product.description,
+//   }
+// }
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+export const fetchCache = "force-no-store";
 
 export default async function ProductPage({
   params,
