@@ -10,14 +10,15 @@ import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { formatPrice } from '@/lib/catalog'
 import { getProduct, getProducts } from '@/lib/db/products'
+export const dynamic = "force-dynamic";
 
-export async function generateStaticParams() {
-  const products = await getProducts()
+// export async function generateStaticParams() {
+//   const products = await getProducts()
 
-  return products.map((product) => ({
-    slug: product.slug,
-  }))
-}
+//   return products.map((product) => ({
+//     slug: product.slug,
+//   }))
+// }
 
 export async function generateMetadata({
   params,
