@@ -1,74 +1,43 @@
-
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
-import type { Product } from "@/lib/generated/prisma/client";
+import { Plus } from "lucide-react";
 
-export const dynamic = "force-dynamic";
+import { prisma } from "@/lib/prisma";
+import ProductsTable from "@/components/admin/products-table";
+
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
+    include: {
+      images: true,
+      colors: true,
+    },
     orderBy: {
       createdAt: "desc",
     },
   });
 
   return (
-    <main className="mx-auto max-w-7xl px-6 py-10">
-      <div className="mb-10 flex items-center justify-between">
+    <div className="space-y-8">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-5xl">
+          <h1 className="text-3xl font-bold tracking-tight">
             Products
           </h1>
 
-          <p className="mt-2 text-muted-foreground">
-            Manage your catalogue.
+          <p className="mt-2 text-neutral-500">
+            Manage your leather collection.
           </p>
         </div>
 
         <Link
           href="/admin/products/new"
-          className="rounded-xl bg-black px-5 py-3 text-white"
+          className="inline-flex items-center gap-2 rounded-xl bg-black px-5 py-3 text-white transition hover:opacity-90"
         >
+          <Plus size={18} />
           New Product
         </Link>
       </div>
 
-      <div className="overflow-hidden rounded-3xl border">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b bg-muted/40">
-              <th className="p-5 text-left">Product</th>
-              <th className="p-5 text-left">Category</th>
-              <th className="p-5 text-left">Price</th>
-              <th className="p-5 text-left">Stock</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {products.map((product: Product) => (
-              <tr
-                key={product.id}
-                className="border-b transition hover:bg-muted/30"
-              >
-                <td className="p-5">
-                  {product.name}
-                </td>
-
-                <td className="p-5">
-                  {product.category}
-                </td>
-
-                <td className="p-5">
-                  ${Number(product.price)}
-                </td>
-
-                <td className="p-5">
-                  {product.stock}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </main>
+      <ProductsTable products={products} />
+    </div>
   );
 }
