@@ -1,13 +1,23 @@
 'use client'
 
 import { useMemo, useState } from 'react'
+
 import { ProductCard } from '@/components/product-card'
-import { categories, products, type Category } from '@/lib/products'
+import { categories } from '@/lib/catalog'
+import type { Category, Product } from '@/lib/types/product'
 
 type Filter = Category | 'All'
 type SortKey = 'featured' | 'price-asc' | 'price-desc'
 
-export function ShopGrid({ initialCategory }: { initialCategory: Filter }) {
+interface ShopGridProps {
+  initialCategory: Filter
+  products: Product[]
+}
+
+export function ShopGrid({
+  initialCategory,
+  products,
+}: ShopGridProps) {
   const [active, setActive] = useState<Filter>(initialCategory)
   const [sort, setSort] = useState<SortKey>('featured')
 
@@ -15,12 +25,29 @@ export function ShopGrid({ initialCategory }: { initialCategory: Filter }) {
     const filtered =
       active === 'All'
         ? products
-        : products.filter((p) => p.category === active)
+        : products.filter((product) => product.category === active)
+
     const sorted = [...filtered]
-    if (sort === 'price-asc') sorted.sort((a, b) => a.price - b.price)
-    if (sort === 'price-desc') sorted.sort((a, b) => b.price - a.price)
+
+    switch (sort) {
+      case 'price-asc':
+        sorted.sort((a, b) => a.price - b.price)
+        break
+
+      case 'price-desc':
+        sorted.sort((a, b) => b.price - a.price)
+        break
+
+      default:
+        // Featured first, then newest
+        sorted.sort((a, b) => {
+          if (a.bestseller === b.bestseller) return 0
+          return a.bestseller ? -1 : 1
+        })
+    }
+
     return sorted
-  }, [active, sort])
+  }, [active, sort, products])
 
   return (
     <div>
@@ -44,6 +71,7 @@ export function ShopGrid({ initialCategory }: { initialCategory: Filter }) {
 
         <label className="flex items-center gap-3 text-xs uppercase tracking-[0.15em] text-muted-foreground">
           Sort
+
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortKey)}
@@ -62,7 +90,10 @@ export function ShopGrid({ initialCategory }: { initialCategory: Filter }) {
 
       <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-12 md:gap-x-6 lg:grid-cols-3">
         {visible.map((product) => (
-          <ProductCard key={product.slug} product={product} />
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
         ))}
       </div>
     </div>
