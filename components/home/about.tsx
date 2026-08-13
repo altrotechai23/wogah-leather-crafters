@@ -7,7 +7,7 @@ export function About() {
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-secondary lg:aspect-square">
           <Image
-            src="/workshop.png"
+            src="/about.png"
             alt="An artisan hand-stitching leather at the Wogah workshop"
             fill
             sizes="(max-width: 1024px) 100vw, 50vw"
