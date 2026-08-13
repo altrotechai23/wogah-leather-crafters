@@ -167,7 +167,7 @@ export function SiteHeader() {
         ====================================================== */}
         <div className="bg-primary px-4 py-2 text-center text-primary-foreground">
           <p className="text-[10px] font-medium uppercase tracking-[0.22em] sm:text-[11px] sm:tracking-[0.25em]">
-            Complimentary shipping on orders over R2000
+            Complimentary shipping on orders over R3500 around South Africa
           </p>
         </div>
 
