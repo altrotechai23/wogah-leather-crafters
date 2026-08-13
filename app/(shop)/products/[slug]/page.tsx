@@ -1,4 +1,4 @@
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ChevronRight } from 'lucide-react'
@@ -9,6 +9,7 @@ import { SiteFooter } from '@/components/site-footer'
 import { SiteHeader } from '@/components/site-header'
 import { formatPrice } from '@/lib/catalog'
 import { getProduct, getProducts } from '@/lib/db/products'
+import { ProductGallery } from '@/components/product-gallery'
 
 
 // export async function generateStaticParams() {
@@ -50,14 +51,14 @@ export default async function ProductPage({
 
   const related = products
     .filter(
-      (item) =>
+      (item: any) =>
         item.category === product.category &&
         item.slug !== product.slug
     )
     .slice(0, 4)
 
   const fallback = products
-    .filter((item) => item.slug !== product.slug)
+    .filter((item: any) => item.slug !== product.slug)
     .slice(0, 4)
 
   const recommendations =
@@ -84,17 +85,12 @@ export default async function ProductPage({
         </nav>
 
         <div className="mt-8 grid gap-10 lg:grid-cols-2 lg:gap-16">
-          {/* Image */}
-          <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-secondary">
-            <Image
-              src={product.images[0] || '/placeholder.svg'}
-              alt={product.name}
-              fill
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              className="object-cover"
-            />
-          </div>
+        
+          {/* Product Gallery */}
+          <ProductGallery
+            images={product.images}
+            productName={product.name}
+          />
 
           {/* Details */}
           <div className="lg:py-6">
@@ -127,7 +123,7 @@ export default async function ProductPage({
                 Details
               </h2>
               <ul className="mt-4 space-y-2">
-                {product.details.map((detail) => (
+                {product.details.map((detail: string) => (
                   <li
                     key={detail}
                     className="flex gap-3 text-sm leading-relaxed text-muted-foreground"
@@ -154,7 +150,7 @@ export default async function ProductPage({
             You may also like
           </h2>
           <div className="mt-12 grid grid-cols-2 gap-x-4 gap-y-10 md:gap-x-6 lg:grid-cols-4">
-            {recommendations.map((p) => (
+            {recommendations.map((p: any) => (
               <ProductCard key={p.slug} product={p} />
             ))}
           </div>
