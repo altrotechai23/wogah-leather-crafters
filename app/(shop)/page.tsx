@@ -1,4 +1,5 @@
 import { CartDrawer } from '@/components/cart/cart-drawer'
+import { About } from '@/components/home/about'
 import { CategoryGrid } from '@/components/home/category-grid'
 import { Featured } from '@/components/home/featured'
 import { Hero } from '@/components/home/hero'
@@ -15,6 +16,7 @@ export default function HomePage() {
         <Hero />
         <CategoryGrid />
         <Featured />
+        <About />
         <Story />
         <PromiseBand />
       </main>
