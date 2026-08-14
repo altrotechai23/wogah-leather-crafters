@@ -244,7 +244,7 @@ export function SiteHeader() {
             className="relative z-10 shrink-0"
           >
             <Image
-              src="/wogah-logo.jpg"
+              src="/wogah-leather-transparent.png"
               alt="Wogah Leather Crafters"
               width={120}
               height={120}
